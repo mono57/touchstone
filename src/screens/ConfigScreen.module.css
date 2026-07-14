@@ -1,0 +1,139 @@
+.wrap { max-width: 900px; margin: 0 auto; padding: 44px 40px 80px; animation: tsIn 0.25s ease; }
+.overline {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.title { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 6px; }
+.intro { font-size: 14px; line-height: 1.6; color: var(--ink-2); margin: 0 0 30px; max-width: 640px; }
+.codeChip {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12.5px;
+  background: var(--surface-2);
+  padding: 1px 6px;
+  border-radius: 5px;
+}
+
+.contractGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 30px; }
+.contractCard { border: 1px solid var(--border); border-radius: 12px; background: var(--surface); padding: 16px 18px; }
+.contractLabel {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.pre { margin: 0; font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.65; color: var(--code-ink); }
+
+.sectionLabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.backendList { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.backendItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  padding: 11px 14px;
+}
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: 0 0 auto; }
+.beBody { flex: 1; min-width: 0; }
+.beTop { display: flex; align-items: center; gap: 8px; }
+.beName { font-weight: 600; font-size: 13px; }
+.beActive { font-size: 9.5px; color: var(--accent-ink); background: var(--accent-soft); padding: 1px 7px; border-radius: 20px; }
+.beUrl {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-2);
+  margin-top: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.beK { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--muted); flex: 0 0 auto; }
+.beRemove {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  border-radius: 7px;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  flex: 0 0 auto;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.declare {
+  border: 1px dashed var(--border-strong);
+  border-radius: 11px;
+  padding: 14px 16px;
+  margin-bottom: 26px;
+  background: var(--surface-2);
+}
+.declareTitle { font-size: 12px; font-weight: 600; margin-bottom: 10px; }
+.declareRow1 { display: grid; grid-template-columns: 1fr 1.5fr; gap: 8px; margin-bottom: 8px; }
+.declareRow2 { display: grid; grid-template-columns: 2fr 0.6fr auto; gap: 8px; }
+.input {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 11px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 12px;
+  outline: none;
+  font-family: inherit;
+  width: 100%;
+}
+.addBtn {
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 0 18px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.declareNote { font-size: 11px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+.mono105 { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; }
+
+.yamlHead { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.judgeBtn {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink-2);
+  font-size: 12px;
+  cursor: pointer;
+}
+.yamlPre {
+  margin: 0;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  overflow-x: auto;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.8;
+  color: var(--code-ink);
+}

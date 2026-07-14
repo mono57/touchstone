@@ -1,0 +1,128 @@
+.aside {
+  width: 236px;
+  flex: 0 0 236px;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.header { padding: 20px 18px 14px; display: flex; align-items: center; gap: 10px; }
+.logo { width: 22px; height: 22px; border-radius: 6px; background: var(--accent); flex: 0 0 auto; }
+.brand { font-weight: 600; font-size: 15px; letter-spacing: -0.015em; }
+.version {
+  margin-left: auto;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 1px 5px;
+  border-radius: 5px;
+}
+
+.block { padding: 2px 14px 14px; }
+.overline {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0 4px 6px;
+}
+
+.backendBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface-2);
+  cursor: pointer;
+  color: var(--ink);
+}
+.healthDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  flex: 0 0 auto;
+}
+.backendName {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.reach { font-size: 10px; color: var(--muted); }
+
+.nav { padding: 2px 14px; display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.navOverline {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 6px 4px 6px;
+}
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 11px;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  width: 100%;
+  transition: background 0.12s;
+  background: transparent;
+  color: var(--ink-2);
+}
+.navItemActive { background: var(--surface-2); color: var(--ink); }
+.navLabel { flex: 1; }
+.badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  padding: 1px 6px;
+  border-radius: 20px;
+}
+
+.footer {
+  padding: 12px 14px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.themeBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  color: var(--ink-2);
+  font-size: 12px;
+  flex: 1;
+}
+.moon {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--ink-2);
+  box-shadow: inset -3px -3px 0 0 var(--surface);
+}
+.themeLabel { flex: 1; text-align: left; }
