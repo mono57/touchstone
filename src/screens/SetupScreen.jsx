@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import s from './SetupScreen.module.css';
 import { useStore } from '../state/useStore.js';
 import { parseQuestions } from '../lib/parseQuestions.js';
@@ -13,6 +14,7 @@ const MANIFEST = [
 
 export default function SetupScreen() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const backends = useStore(st => st.backends);
   const backend = useStore(st => st.backend);
   const k = useStore(st => st.k);
@@ -145,7 +147,7 @@ export default function SetupScreen() {
               <button onClick={() => addQuestion(draft)} className={s.qAddBtn}>{t('setup.add')}</button>
             </div>
           </div>
-          <button onClick={startAnnotating} className={s.cta}>
+          <button onClick={() => { startAnnotating(); navigate('/annotate'); }} className={s.cta}>
             {t('setup.start')}
             <span className={s.ctaArrow}>→</span>
           </button>

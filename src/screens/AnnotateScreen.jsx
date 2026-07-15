@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import s from './AnnotateScreen.module.css';
 import { useStore } from '../state/useStore.js';
 import Segmented from '../components/Segmented.jsx';
@@ -28,6 +29,7 @@ function decorateCandidates(q, readingId) {
 
 export default function AnnotateScreen() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const questions = useStore(st => st.questions);
   const qIndex = useStore(st => st.qIndex);
   const layout = useStore(st => st.layout);
@@ -56,13 +58,12 @@ export default function AnnotateScreen() {
       if (e.key >= '1' && e.key <= '9') {
         const i = +e.key - 1;
         if (cur.candidates[i]) { st.toggleCandidate(cur.candidates[i].id); e.preventDefault(); }
-      } else if (e.key === 'ArrowRight') { st.next(); e.preventDefault(); }
+      } else if (e.key === 'ArrowRight' || e.key === 'Enter') { if (st.next()) navigate('/golden-set'); e.preventDefault(); }
       else if (e.key === 'ArrowLeft') { st.prev(); e.preventDefault(); }
-      else if (e.key === 'Enter') { st.next(); e.preventDefault(); }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, []);
+  }, [navigate]);
 
   const q = questions[qIndex];
   const dense = density === 'compact';
@@ -198,8 +199,8 @@ export default function AnnotateScreen() {
         </div>
         <div className={s.footerActions}>
           <button onClick={prev} className={s.btnPrev}>{t('annotate.previous')}</button>
-          <button onClick={skip} className={s.btnSkip}>{t('annotate.skip')}</button>
-          <button onClick={next} className={s.btnNext}>{t('annotate.saveNext')} <span className={s.btnNextArrow}>→</span></button>
+          <button onClick={() => { if (skip()) navigate('/golden-set'); }} className={s.btnSkip}>{t('annotate.skip')}</button>
+          <button onClick={() => { if (next()) navigate('/golden-set'); }} className={s.btnNext}>{t('annotate.saveNext')} <span className={s.btnNextArrow}>→</span></button>
         </div>
       </div>
     </div>

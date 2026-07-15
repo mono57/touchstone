@@ -5,7 +5,7 @@ import { seed, genQuestion } from '../data/seed.js';
 // every action produces a new immutable snapshot.
 export const useStore = create((set, get) => ({
   // ----- state -----
-  screen: 'setup',
+  // Note: the *current screen* is owned by the URL (react-router), not the store.
   theme: 'light',
   layout: 'flow',
   density: 'comfortable',
@@ -24,8 +24,7 @@ export const useStore = create((set, get) => ({
   draft: '',
   questions: seed(),
 
-  // ----- navigation / preferences -----
-  setScreen: (screen) => set({ screen }),
+  // ----- preferences -----
   toggleTheme: () => set(s => ({ theme: s.theme === 'dark' ? 'light' : 'dark' })),
   setLayout: (layout) => set({ layout }),
   setDensity: (density) => set({ density }),
@@ -67,18 +66,32 @@ export const useStore = create((set, get) => ({
   setExpected: (value) => set(s => ({
     questions: s.questions.map((q, i) => i === s.qIndex ? { ...q, expectedAnswer: value } : q),
   })),
-  next: () => set(s => {
-    const qs = s.questions.map((q, i) => i === s.qIndex ? { ...q, done: true } : q);
-    const ni = s.qIndex + 1;
-    if (ni >= qs.length) return { questions: qs, screen: 'overview' };
-    return { questions: qs, qIndex: ni, readingId: null };
-  }),
-  skip: () => set(s => (s.qIndex + 1 >= s.questions.length ? { screen: 'overview' } : { qIndex: s.qIndex + 1, readingId: null })),
+  // next()/skip() return `true` when there is no further question (the caller
+  // then routes to the golden set); otherwise they advance and return false.
+  next: () => {
+    let finished = false;
+    set(s => {
+      const qs = s.questions.map((q, i) => i === s.qIndex ? { ...q, done: true } : q);
+      const ni = s.qIndex + 1;
+      if (ni >= qs.length) { finished = true; return { questions: qs }; }
+      return { questions: qs, qIndex: ni, readingId: null };
+    });
+    return finished;
+  },
+  skip: () => {
+    let finished = false;
+    set(s => {
+      const ni = s.qIndex + 1;
+      if (ni >= s.questions.length) { finished = true; return {}; }
+      return { qIndex: ni, readingId: null };
+    });
+    return finished;
+  },
   prev: () => set(s => ({ qIndex: Math.max(0, s.qIndex - 1), readingId: null })),
-  goToQuestion: (i) => set({ qIndex: i, screen: 'annotate', readingId: null }),
+  goToQuestion: (i) => set({ qIndex: i, readingId: null }),
   startAnnotating: () => {
     const fp = get().questions.findIndex(q => !q.done);
-    set({ screen: 'annotate', qIndex: fp < 0 ? 0 : fp, readingId: null });
+    set({ qIndex: fp < 0 ? 0 : fp, readingId: null });
   },
 
   // ----- question loading -----

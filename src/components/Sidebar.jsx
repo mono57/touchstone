@@ -1,24 +1,25 @@
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useLocation } from 'react-router-dom';
 import s from './Sidebar.module.css';
 import { useStore } from '../state/useStore.js';
 import { LANGUAGES } from '../i18n/index.js';
 import { SetupIcon, AnnotateIcon, OverviewIcon, ExportIcon, ConfigIcon } from './icons.jsx';
 
 const NAV = [
-  { id: 'setup', key: 'nav.setup', Icon: SetupIcon },
-  { id: 'annotate', key: 'nav.annotate', Icon: AnnotateIcon, badge: true },
-  { id: 'overview', key: 'nav.goldenSet', Icon: OverviewIcon },
-  { id: 'export', key: 'nav.export', Icon: ExportIcon },
-  { id: 'config', key: 'nav.config', Icon: ConfigIcon },
+  { path: '/setup', key: 'nav.setup', Icon: SetupIcon },
+  { path: '/annotate', key: 'nav.annotate', Icon: AnnotateIcon, badge: true },
+  { path: '/golden-set', key: 'nav.goldenSet', Icon: OverviewIcon },
+  { path: '/export', key: 'nav.export', Icon: ExportIcon },
+  { path: '/contract', key: 'nav.config', Icon: ConfigIcon },
 ];
 
 export default function Sidebar() {
   const { t, i18n } = useTranslation();
-  const screen = useStore(st => st.screen);
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
   const backend = useStore(st => st.backend);
   const theme = useStore(st => st.theme);
   const questions = useStore(st => st.questions);
-  const setScreen = useStore(st => st.setScreen);
   const cycleBackend = useStore(st => st.cycleBackend);
   const toggleTheme = useStore(st => st.toggleTheme);
 
@@ -44,11 +45,11 @@ export default function Sidebar() {
 
       <nav className={s.nav}>
         <div className={s.navOverline}>{t('sidebar.workspace')}</div>
-        {NAV.map(({ id, key, Icon, badge }) => (
+        {NAV.map(({ path, key, Icon, badge }) => (
           <button
-            key={id}
-            onClick={() => setScreen(id)}
-            className={screen === id ? `${s.navItem} ${s.navItemActive}` : s.navItem}
+            key={path}
+            onClick={() => navigate(path)}
+            className={pathname === path ? `${s.navItem} ${s.navItemActive}` : s.navItem}
           >
             <Icon />
             <span className={s.navLabel}>{t(key)}</span>

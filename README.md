@@ -28,12 +28,30 @@ npm run preview    # serve the production build
 ## Stack
 
 - **React 18** + **Vite** (dev server + build).
+- **react-router-dom** — one URL per screen (the URL owns the current screen).
 - **Zustand** — single store (`src/state/useStore.js`): session state + actions.
 - **react-i18next** — UI internationalization; English is the source locale, French is
   a second locale, switchable from the sidebar.
 - **CSS Modules** — one `.module.css` per component; light/dark theme via CSS custom
-  properties applied on the root. Navigation via a `screen` state field (no router).
+  properties applied on the root.
 - **No UI dependency**: icons are small inline SVGs, typography is IBM Plex Sans / Mono.
+
+## Routes
+
+Each screen has its own URL (deep-linkable, refresh-safe, browser back/forward works):
+
+| Path | Screen |
+|------|--------|
+| `/setup` | Setup (`/` redirects here; unknown paths too) |
+| `/annotate` | Annotate |
+| `/golden-set` | Golden set (Overview) |
+| `/export` | Export |
+| `/contract` | Contract / YAML |
+
+The URL is the source of truth for the current screen; the store keeps the rest (questions,
+current index, …). Screen-changing actions navigate from the components (e.g. finishing the
+last question routes to `/golden-set`). Uses the HTML5 history API (`BrowserRouter`) — Vite's
+dev/preview servers fall back to `index.html`; a static host needs the usual SPA rewrite.
 
 ## Importing questions
 

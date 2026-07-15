@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import s from './OverviewScreen.module.css';
 import { useStore } from '../state/useStore.js';
 import { agreementOf } from '../domain/agreement.js';
@@ -7,6 +8,7 @@ import { computeCalibration } from '../domain/calibration.js';
 
 export default function OverviewScreen() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const questions = useStore(st => st.questions);
   const backend = useStore(st => st.backend);
   const k = useStore(st => st.k);
@@ -58,7 +60,7 @@ export default function OverviewScreen() {
           <span>#</span><span>{t('overview.colQuestion')}</span><span>{t('overview.colRelevant')}</span><span>{t('overview.colAgreement')}</span><span className={s.thRight}>{t('overview.colStatus')}</span>
         </div>
         {rows.map((r) => (
-          <div key={r.i} onClick={() => goToQuestion(r.i)} className={s.row}>
+          <div key={r.i} onClick={() => { goToQuestion(r.i); navigate('/annotate'); }} className={s.row}>
             <span className={s.rowNum}>{r.num}</span>
             <span className={s.rowQuery}>{r.query}</span>
             <span className={s.rowRel}>{r.rel}</span>
