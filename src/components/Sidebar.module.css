@@ -126,3 +126,26 @@
   box-shadow: inset -3px -3px 0 0 var(--surface);
 }
 .themeLabel { flex: 1; text-align: left; }
+
+.langSwitch {
+  display: flex;
+  gap: 2px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2px;
+  flex: 0 0 auto;
+}
+.langBtn {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 7px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.langBtnActive { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }

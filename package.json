@@ -3,15 +3,17 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Touchstone — outil d'annotation de pertinence pour construire des golden sets RAG (agnostique du backend, contrat POST /retrieve).",
+  "description": "Touchstone — relevance annotation tool for building RAG golden sets (backend-agnostic, POST /retrieve contract).",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "i18next": "^26.3.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-i18next": "^17.0.9",
     "zustand": "^5.0.14"
   },
   "devDependencies": {

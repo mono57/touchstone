@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import s from './AnnotateScreen.module.css';
 import { useStore } from '../state/useStore.js';
 import Segmented from '../components/Segmented.jsx';
@@ -26,6 +27,7 @@ function decorateCandidates(q, readingId) {
 }
 
 export default function AnnotateScreen() {
+  const { t } = useTranslation();
   const questions = useStore(st => st.questions);
   const qIndex = useStore(st => st.qIndex);
   const layout = useStore(st => st.layout);
@@ -76,8 +78,8 @@ export default function AnnotateScreen() {
   const visible = list.filter(c => !hiddenSet.has(c.id));
   const shownList = showBelow ? list : visible;
   const toggleLabel = showBelow
-    ? 'Masquer les candidats à faible score'
-    : `+ ${hidden.length} candidats à faible score (< ${READ_CUTOFF.toFixed(2)})`;
+    ? t('annotate.hideLowScore')
+    : t('annotate.showLowScore', { n: hidden.length, cutoff: READ_CUTOFF.toFixed(2) });
 
   const stopLink = (e) => e.preventDefault();
 
@@ -92,15 +94,15 @@ export default function AnnotateScreen() {
           <div className={s.progressTrack}>
             <div className={s.progressBar} style={{ width: progressPct + '%' }} />
           </div>
-          <span className={s.doneCount}>{doneCount} annotées</span>
+          <span className={s.doneCount}>{t('annotate.annotated', { n: doneCount })}</span>
           <div className={s.controls}>
             <Segmented
-              label="Vue" value={layout} onChange={setLayout}
-              options={[{ value: 'flow', label: 'Flux' }, { value: 'split', label: 'Deux volets' }]}
+              label={t('annotate.view')} value={layout} onChange={setLayout}
+              options={[{ value: 'flow', label: t('annotate.flow') }, { value: 'split', label: t('annotate.split') }]}
             />
             <Segmented
-              label="Densité" value={density} onChange={setDensity}
-              options={[{ value: 'comfortable', label: 'Confort' }, { value: 'compact', label: 'Compact' }]}
+              label={t('annotate.density')} value={density} onChange={setDensity}
+              options={[{ value: 'comfortable', label: t('annotate.comfortable') }, { value: 'compact', label: t('annotate.compact') }]}
             />
           </div>
         </div>
@@ -110,7 +112,7 @@ export default function AnnotateScreen() {
           <h1 className={s.query}>{q ? q.query : ''}</h1>
           <div className={s.selBox}>
             <div className={s.selNum}>{q ? q.relevantIds.length : 0}</div>
-            <div className={s.selLabel}>pertinents / {list.length}</div>
+            <div className={s.selLabel}>{t('annotate.relevantOf', { total: list.length })}</div>
           </div>
         </div>
       </div>
@@ -119,10 +121,12 @@ export default function AnnotateScreen() {
         {layout === 'flow' && (
           <div className={s.flow}>
             <div className={s.flowHead}>
-              <div className={s.flowHint}>Coche les passages qui <strong style={{ color: 'var(--ink)' }}>répondent</strong> à la question.</div>
-              <div className={s.legend}><span className={s.legendSwatch} /> suggéré par le juge LLM</div>
+              <div className={s.flowHint}>
+                <Trans i18nKey="annotate.flowHint" components={{ strong: <strong style={{ color: 'var(--ink)' }} /> }} />
+              </div>
+              <div className={s.legend}><span className={s.legendSwatch} /> {t('annotate.legend')}</div>
             </div>
-            <div className={s.flowSub}>{list.length} candidats récupérés (k) · triés par score décroissant</div>
+            <div className={s.flowSub}>{t('annotate.retrieved', { n: list.length })}</div>
             <div className={s.cards} style={{ gap: dense ? '8px' : '11px' }}>
               {shownList.map((c) => (
                 <CandidateCard key={c.id} c={c} dense={dense} onToggle={() => toggleCandidate(c.id)} />
@@ -132,11 +136,11 @@ export default function AnnotateScreen() {
               <button onClick={toggleShowBelow} className={s.showBtn}>{toggleLabel}</button>
             )}
             <div className={s.answerBlock}>
-              <label className={s.answerLabel}>Réponse attendue</label>
+              <label className={s.answerLabel}>{t('annotate.expectedAnswer')}</label>
               <textarea
                 value={q ? q.expectedAnswer : ''}
                 onChange={(e) => setExpected(e.target.value)}
-                placeholder="Résume la réponse correcte à partir des passages cochés…"
+                placeholder={t('annotate.answerPlaceholder')}
                 className={s.answerArea}
               />
             </div>
@@ -146,7 +150,7 @@ export default function AnnotateScreen() {
         {layout === 'split' && (
           <div className={s.split}>
             <div className={s.splitList}>
-              <div className={s.splitListHead}>{list.length} candidats · triés par score</div>
+              <div className={s.splitListHead}>{t('annotate.sortedByScore', { n: list.length })}</div>
               {list.map((c) => (
                 <CandidateRow
                   key={c.id}
@@ -161,13 +165,13 @@ export default function AnnotateScreen() {
               {reading && (
                 <div className={s.readerInner}>
                   <div className={s.readerTop}>
-                    {reading.suggested && <span className={s.pillAi}><span className={s.dotAi} />suggéré IA</span>}
-                    <span className={s.readerScore}>score {reading.scoreText}</span>
+                    {reading.suggested && <span className={s.pillAi}><span className={s.dotAi} />{t('annotate.aiSuggested')}</span>}
+                    <span className={s.readerScore}>{t('annotate.score', { score: reading.scoreText })}</span>
                   </div>
                   <h2 className={s.readerTitle}>{reading.title}</h2>
                   <div className={s.readerMeta}>
                     <span className={s.readerId}>{reading.id}</span>
-                    {reading.hasMultiSource && <span className={s.readerSourcesLabel}>sources :</span>}
+                    {reading.hasMultiSource && <span className={s.readerSourcesLabel}>{t('annotate.sources')}</span>}
                     {reading.sources.map((src, i) => (
                       <a key={i} href={src.url} onClick={stopLink} className={s.readerLink}>{src.label} →</a>
                     ))}
@@ -177,7 +181,7 @@ export default function AnnotateScreen() {
                     onClick={() => toggleCandidate(reading.id)}
                     className={reading.selected ? `${s.action} ${s.actionSelected}` : s.action}
                   >
-                    {reading.selected ? 'Retirer de la sélection' : 'Marquer pertinent'}
+                    {reading.selected ? t('annotate.removeSelection') : t('annotate.markRelevant')}
                   </button>
                 </div>
               )}
@@ -188,14 +192,14 @@ export default function AnnotateScreen() {
 
       <div className={s.footer}>
         <div className={s.hints}>
-          <span className={s.hint}><kbd className={s.kbd}>1–9</kbd> cocher</span>
-          <span className={s.hint}><kbd className={s.kbd}>←</kbd><kbd className={s.kbd}>→</kbd> naviguer</span>
-          <span className={s.hint}><kbd className={s.kbd}>↵</kbd> suivant</span>
+          <span className={s.hint}><kbd className={s.kbd}>1–9</kbd> {t('annotate.kbdTick')}</span>
+          <span className={s.hint}><kbd className={s.kbd}>←</kbd><kbd className={s.kbd}>→</kbd> {t('annotate.kbdNavigate')}</span>
+          <span className={s.hint}><kbd className={s.kbd}>↵</kbd> {t('annotate.kbdNext')}</span>
         </div>
         <div className={s.footerActions}>
-          <button onClick={prev} className={s.btnPrev}>← Précédent</button>
-          <button onClick={skip} className={s.btnSkip}>Passer</button>
-          <button onClick={next} className={s.btnNext}>Enregistrer &amp; suivant <span className={s.btnNextArrow}>→</span></button>
+          <button onClick={prev} className={s.btnPrev}>{t('annotate.previous')}</button>
+          <button onClick={skip} className={s.btnSkip}>{t('annotate.skip')}</button>
+          <button onClick={next} className={s.btnNext}>{t('annotate.saveNext')} <span className={s.btnNextArrow}>→</span></button>
         </div>
       </div>
     </div>

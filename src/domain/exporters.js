@@ -48,8 +48,8 @@ export function buildYaml(backends, judgeEnabled) {
   return 'backends:\n' + yamlBackends +
     '\n\noutput:\n  path: ./golden_set.jsonl\n  formats: [jsonl, qrels]\n\njudge:\n  enabled: ' +
     (judgeEnabled ? 'true' : 'false') +
-    '\n  provider: anthropic\n  model: claude-sonnet-5\n  # clé via ANTHROPIC_API_KEY, jamais dans le fichier';
+    '\n  provider: anthropic\n  model: claude-sonnet-5\n  # key via ANTHROPIC_API_KEY, never in the file';
 }
 
-export const REQ_SAMPLE = '{ "query": "Comment faire tourner\n           mes clés API ?",\n  "k": 20 }';
-export const RES_SAMPLE = '{ "results": [\n    { "id": "auth#rotating",\n      "title": "Rotation…",\n      "text": "Créer une clé…",\n      "score": 0.82 }\n  ] }';
+export const REQ_SAMPLE = '{ "query": "How do I rotate\n           my API keys?",\n  "k": 20 }';
+export const RES_SAMPLE = '{ "results": [\n    { "id": "auth#rotating",\n      "title": "Rotating…",\n      "text": "Create a key…",\n      "score": 0.82 }\n  ] }';

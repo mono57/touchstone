@@ -89,7 +89,7 @@ export const useStore = create((set, get) => ({
     set(s => ({ questions: [...s.questions, genQuestion(t)], draft: '' }));
   },
   importSample: () => {
-    const batch = ['Comment inviter un membre dans mon équipe ?', 'Quels sont les quotas de mon plan actuel ?', "Comment paginer les résultats de l'API ?"]
+    const batch = ['How do I invite a member to my team?', 'What are the quotas of my current plan?', 'How do I paginate API results?']
       .map(qq => genQuestion(qq));
     set(s => ({ questions: [...s.questions, ...batch] }));
   },

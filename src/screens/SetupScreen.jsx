@@ -1,3 +1,4 @@
+import { Trans, useTranslation } from 'react-i18next';
 import s from './SetupScreen.module.css';
 import { useStore } from '../state/useStore.js';
 
@@ -5,10 +6,11 @@ const MANIFEST = [
   { k: 'name', v: '"Chaari docs"' },
   { k: 'id_scheme', v: '"page#anchor"' },
   { k: 'default_k', v: '20' },
-  { k: 'languages', v: '["en","fr"]' },
+  { k: 'languages', v: '["en"]' },
 ];
 
 export default function SetupScreen() {
+  const { t } = useTranslation();
   const backends = useStore(st => st.backends);
   const backend = useStore(st => st.backend);
   const k = useStore(st => st.k);
@@ -21,18 +23,21 @@ export default function SetupScreen() {
   const importSample = useStore(st => st.importSample);
   const startAnnotating = useStore(st => st.startAnnotating);
 
+  const langs = [...new Set(questions.map(q => q.lang))].join(' · ');
+
   return (
     <div className={s.wrap}>
-      <div className={s.overline}>Étape 1 · préparer la session</div>
-      <h1 className={s.title}>Configuration</h1>
+      <div className={s.overline}>{t('setup.overline')}</div>
+      <h1 className={s.title}>{t('setup.title')}</h1>
       <p className={s.intro}>
-        Touchstone ne cherche pas — il <em>demande à chercher</em>. Choisis le backend qui expose
-        le contrat <span className={s.codeChip}>POST /retrieve</span>, puis charge ton jeu de questions.
+        <Trans i18nKey="setup.intro" components={{ em: <em />, chip: <span className={s.codeChip} /> }} />
       </p>
 
       <div className={s.sectionHead}>
-        <span className={s.sectionLabel}>Choisir un backend</span>
-        <span className={s.sectionHint}>— déclarés dans <span className={s.mono11}>touchstone.yaml</span> (onglet Contrat / YAML)</span>
+        <span className={s.sectionLabel}>{t('setup.chooseBackend')}</span>
+        <span className={s.sectionHint}>
+          <Trans i18nKey="setup.hint" components={{ mono: <span className={s.mono11} /> }} />
+        </span>
       </div>
       <div className={s.backendGrid}>
         {backends.map((b) => {
@@ -44,12 +49,12 @@ export default function SetupScreen() {
               <div className={s.cardTop}>
                 <span className={s.dot8} style={{ background: dot, boxShadow: `0 0 0 3px ${halo}` }} />
                 <span className={s.cardName}>{b.name}</span>
-                {active && <span className={s.selBadge}>sélectionné</span>}
+                {active && <span className={s.selBadge}>{t('setup.selected')}</span>}
               </div>
               <div className={s.cardUrl}>{b.url}</div>
               <div className={s.cardMeta}>
                 <span>k&nbsp;=&nbsp;<span className={s.kv}>{b.k}</span></span>
-                <span>{b.health ? '/health · 200 OK' : 'injoignable'}</span>
+                <span>{b.health ? t('setup.healthOk') : t('setup.unreachable')}</span>
               </div>
             </button>
           );
@@ -58,7 +63,7 @@ export default function SetupScreen() {
 
       <div className={s.cols}>
         <div>
-          <div className={`${s.sectionLabel} ${s.mb12}`}>Manifest du backend</div>
+          <div className={`${s.sectionLabel} ${s.mb12}`}>{t('setup.manifest')}</div>
           <div className={s.manifestBox}>
             {MANIFEST.map((m) => (
               <div key={m.k} className={s.manifestRow}>
@@ -69,24 +74,28 @@ export default function SetupScreen() {
           </div>
           <div className={s.kBlock}>
             <div className={s.kHead}>
-              <span className={s.sectionLabel}>Candidats par question · k</span>
+              <span className={s.sectionLabel}>{t('setup.kLabel')}</span>
               <span className={s.kValue}>{k}</span>
             </div>
             <input type="range" min="5" max="40" step="1" value={k} onChange={(e) => setK(e.target.value)} className={s.kSlider} />
-            <div className={s.kNote}>Un k <em>généreux</em> favorise la reconnaissance : on coche parmi des candidats plutôt que de deviner de mémoire.</div>
+            <div className={s.kNote}>
+              <Trans i18nKey="setup.kNote" components={{ em: <em /> }} />
+            </div>
           </div>
         </div>
 
         <div>
           <div className={s.loadHead}>
-            <span className={s.sectionLabel}>Charger les questions</span>
-            <button onClick={importSample} className={s.importBtn}>↑ Importer questions.txt</button>
+            <span className={s.sectionLabel}>{t('setup.loadQuestions')}</span>
+            <button onClick={importSample} className={s.importBtn}>{t('setup.import')}</button>
           </div>
-          <div className={s.loadHint}>Depuis un fichier <span className={s.mono11}>questions.txt</span> ou saisies à la volée ci-dessous.</div>
+          <div className={s.loadHint}>
+            <Trans i18nKey="setup.loadHint" components={{ mono: <span className={s.mono11} /> }} />
+          </div>
           <div className={s.qBox}>
             <div className={s.qBoxHead}>
               <span className={s.qFile}>questions.txt</span>
-              <span className={s.qCount}>{questions.length} lignes · fr · en</span>
+              <span className={s.qCount}>{t('setup.lines', { n: questions.length, langs })}</span>
             </div>
             <div className={s.qList}>
               {questions.map((q, i) => (
@@ -102,17 +111,17 @@ export default function SetupScreen() {
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') addQuestion(draft); }}
-                placeholder="Ajouter une question à la volée…"
+                placeholder={t('setup.addPlaceholder')}
                 className={s.qInput}
               />
-              <button onClick={() => addQuestion(draft)} className={s.qAddBtn}>+ Ajouter</button>
+              <button onClick={() => addQuestion(draft)} className={s.qAddBtn}>{t('setup.add')}</button>
             </div>
           </div>
           <button onClick={startAnnotating} className={s.cta}>
-            Commencer l'annotation
+            {t('setup.start')}
             <span className={s.ctaArrow}>→</span>
           </button>
-          <div className={s.ctaNote}>Session résumable · chaque réponse est écrite immédiatement (append-only).</div>
+          <div className={s.ctaNote}>{t('setup.resumable')}</div>
         </div>
       </div>
     </div>

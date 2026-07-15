@@ -1,6 +1,6 @@
 import s from './Segmented.module.css';
 
-// Reusable labelled segmented control (used for Vue and Densité).
+// Reusable labelled segmented control (used for View and Density).
 export default function Segmented({ label, value, options, onChange }) {
   return (
     <div className={s.wrap}>

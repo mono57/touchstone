@@ -1,75 +1,88 @@
 # Touchstone
 
-Outil open-source d'**annotation de pertinence** pour construire des *golden sets*
-d'évaluation de systèmes RAG. Touchstone est **agnostique du backend** : il ne contient
-aucun retriever, il parle un contrat HTTP (`POST /retrieve`) que n'importe quel système
-de recherche implémente.
+Open-source **relevance annotation** tool for building *golden sets* to evaluate RAG systems.
+Touchstone is **backend-agnostic**: it contains no retriever, it speaks an HTTP contract
+(`POST /retrieve`) that any search system can implement.
 
-Principe : **reconnaissance, pas rappel** — l'annotateur ne devine pas les bons passages,
-il *coche* parmi une liste de candidats renvoyés par le backend. Local-first, append-only,
-résumable.
+Guiding principle: **recognition, not recall** — the annotator doesn't guess the right
+passages from memory, they *tick* among a list of candidates returned by the backend.
+Local-first, append-only, resumable.
 
-> Prototype front-end mono-page (React + Vite). Les données sont des exemples en mémoire
-> et les appels `/retrieve` sont simulés.
+> Single-page front-end prototype (React + Vite). Data is in-memory samples and `/retrieve`
+> calls are simulated.
 
-## Démarrer
+## Getting started
 
 ```bash
 npm install
-npm run dev        # serveur de dev (HMR)  → http://localhost:5173
+npm run dev        # dev server (HMR)  → http://localhost:5173
 ```
 
-## Build de production
+## Production build
 
 ```bash
-npm run build      # génère dist/
-npm run preview    # sert le build de production
+npm run build      # outputs dist/
+npm run preview    # serve the production build
 ```
 
 ## Stack
 
 - **React 18** + **Vite** (dev server + build).
-- **Zustand** — store unique (`src/state/useStore.js`) : état de session + actions.
-- **CSS Modules** — un `.module.css` par composant ; thème clair/sombre par variables CSS
-  appliquées sur la racine. Navigation par champ d'état `screen` (pas de router).
-- **Aucune dépendance UI** : icônes = petits SVG inline, typographie IBM Plex Sans / Mono.
+- **Zustand** — single store (`src/state/useStore.js`): session state + actions.
+- **react-i18next** — UI internationalization; English is the source locale, French is
+  a second locale, switchable from the sidebar.
+- **CSS Modules** — one `.module.css` per component; light/dark theme via CSS custom
+  properties applied on the root. Navigation via a `screen` state field (no router).
+- **No UI dependency**: icons are small inline SVGs, typography is IBM Plex Sans / Mono.
+
+## Internationalization (i18n)
+
+UI strings live in `src/i18n/locales/{en,fr}.json` and are consumed with `useTranslation()`
+(`t('key')`) or `<Trans>` for strings that embed markup. The active language is switched from
+the **EN / FR** control in the sidebar footer; `<html lang>` is kept in sync.
+
+- Default / fallback locale: **English** (`src/i18n/index.js`).
+- Add a language: drop a `xx.json` in `locales/`, register it in `src/i18n/index.js`
+  (`resources` + `LANGUAGES`).
+- The **sample golden-set data is intentionally not localized** — it's content (in a real
+  deployment it comes from the backend), so questions/passages stay as authored (English).
 
 ## Architecture
 
 ```
 src/
-├── main.jsx                # montage React
-├── App.jsx                 # coquille : thème racine + Sidebar + switch d'écran
-├── index.css               # reset global + keyframes
-├── lib/                    # utilitaires (css, theme, download)
-├── data/seed.js            # données d'exemple (pures)
-├── domain/                 # logique métier PURE (agreement, calibration, exporters)
-├── state/useStore.js       # store Zustand (source de vérité unique)
-├── components/             # briques UI + CSS Modules (Sidebar, Segmented, Toggle,
+├── main.jsx                # React mount
+├── App.jsx                 # shell: root theme + Sidebar + screen switch
+├── index.css               # global reset + keyframes
+├── lib/                    # utilities (css, theme, download)
+├── data/seed.js            # sample data (pure)
+├── domain/                 # PURE business logic (agreement, calibration, exporters)
+├── state/useStore.js       # Zustand store (single source of truth)
+├── components/             # UI building blocks + CSS Modules (Sidebar, Segmented, Toggle,
 │                           #   CandidateCard, CandidateRow, icons)
-└── screens/                # 5 écrans + CSS Modules
+└── screens/                # the 5 screens + CSS Modules
 ```
 
-Chaque écran lit le store via des sélecteurs et calcule ses données dérivées avec `useMemo`
-à partir des fonctions pures de `domain/` — pas de fonction-dieu de rendu.
+Each screen reads the store via selectors and derives its data with `useMemo` from the pure
+functions in `domain/` — no god render function.
 
-## Les 5 écrans
+## The 5 screens
 
-1. **Configuration** — choix du backend, manifest, slider `k`, chargement des questions.
-2. **Annotation** — le cœur : cochage des candidats (vue *Flux* ou *Deux volets*,
-   densité *Confort* / *Compact*), raccourcis clavier `1–9` / `←` `→` / `↵`, repli de la
-   traîne à faible score pour les grands `k`.
-3. **Golden set** — vue d'ensemble, tableau des questions, distribution & calibration
-   (histogramme des chunks pertinents → `k` recommandé ; scores de similarité → seuil).
-4. **Export** — `golden_set.jsonl` (natif) et `qrels` (interop ranx / Ragas), avec
-   téléchargement réel du contenu généré.
-5. **Contrat / YAML** — contrat de retrieval, gestion des backends déclarés, toggle du
-   juge LLM, `touchstone.yaml` généré dynamiquement.
+1. **Setup** — backend choice, manifest, `k` slider, question loading.
+2. **Annotate** — the core: ticking candidates (*Flow* or *Split* view, *Comfortable* /
+   *Compact* density), keyboard shortcuts `1–9` / `←` `→` / `↵`, low-score tail collapsed
+   for large `k`.
+3. **Golden set** — overview, questions table, distribution & calibration (histogram of
+   relevant chunks → recommended `k`; similarity scores → threshold).
+4. **Export** — `golden_set.jsonl` (native) and `qrels` (ranx / Ragas interop), with a real
+   download of the generated content.
+5. **Contract / YAML** — retrieval contract, declared-backends management, LLM-judge toggle,
+   dynamically generated `touchstone.yaml`.
 
-## Deux signaux visuels indépendants
+## Two independent visual signals
 
-- **Vert** = pertinence **validée par l'humain** (case cochée, pastille « pertinent »).
-- **Indigo** = **suggéré par le juge LLM** (pastille « IA », point indigo).
+- **Green** = relevance **validated by the human** (ticked box, "relevant" pill).
+- **Indigo** = **suggested by the LLM judge** ("AI" pill, indigo dot).
 
-Un candidat peut porter les deux (accord), l'un sans l'autre (ajout humain / suggestion
-écartée) — ces deux dimensions ne se confondent jamais.
+A candidate may carry both (agreement), one without the other (human addition / dismissed
+suggestion) — the two dimensions never blur together.
