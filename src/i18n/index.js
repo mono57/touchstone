@@ -7,19 +7,28 @@ import fr from './locales/fr.json';
 // second locale. Sample data (the golden set) is NOT localized — it's content,
 // not UI, and in a real deployment it comes from the backend.
 export const LANGUAGES = ['en', 'fr'];
+const LANG_KEY = 'touchstone-lang';
+
+// Resume the previously chosen language (source/default is English).
+const saved = (() => {
+  try { return localStorage.getItem(LANG_KEY); } catch { return null; }
+})();
 
 i18n.use(initReactI18next).init({
   resources: {
     en: { translation: en },
     fr: { translation: fr },
   },
-  lng: 'en',
+  lng: LANGUAGES.includes(saved) ? saved : 'en',
   fallbackLng: 'en',
   interpolation: { escapeValue: false }, // React already escapes
 });
 
-// Keep the document language in sync (a11y / SEO).
-const applyLang = (lng) => { document.documentElement.lang = lng; };
+// Keep the document language in sync (a11y / SEO) and persist the choice.
+const applyLang = (lng) => {
+  document.documentElement.lang = lng;
+  try { localStorage.setItem(LANG_KEY, lng); } catch { /* ignore */ }
+};
 applyLang(i18n.resolvedLanguage || 'en');
 i18n.on('languageChanged', applyLang);
 

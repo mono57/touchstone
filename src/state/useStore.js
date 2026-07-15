@@ -1,9 +1,11 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { seed, genQuestion } from '../data/seed.js';
 
-// Single source of truth for the annotation session. Local-first, append-only:
-// every action produces a new immutable snapshot.
-export const useStore = create((set, get) => ({
+// Single source of truth for the annotation session. Local-first, append-only,
+// RESUMABLE: durable state is persisted to localStorage so imported questions,
+// annotations, backends and preferences survive reloads and deep-links.
+export const useStore = create(persist((set, get) => ({
   // ----- state -----
   // Note: the *current screen* is owned by the URL (react-router), not the store.
   theme: 'light',
@@ -108,4 +110,23 @@ export const useStore = create((set, get) => ({
     const created = items.map(it => genQuestion(it.question, it.lang, it.type));
     set(s => ({ questions: [...s.questions, ...created] }));
   },
+}), {
+  name: 'touchstone-session',
+  version: 1,
+  storage: createJSONStorage(() => localStorage),
+  // Persist durable session state only — not transient UI (draft, readingId,
+  // newBackend draft) and never the action functions.
+  partialize: (s) => ({
+    theme: s.theme,
+    layout: s.layout,
+    density: s.density,
+    backend: s.backend,
+    backends: s.backends,
+    k: s.k,
+    qIndex: s.qIndex,
+    threshold: s.threshold,
+    judgeEnabled: s.judgeEnabled,
+    showBelow: s.showBelow,
+    questions: s.questions,
+  }),
 }));

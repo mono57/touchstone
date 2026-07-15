@@ -29,7 +29,8 @@ npm run preview    # serve the production build
 
 - **React 18** + **Vite** (dev server + build).
 - **react-router-dom** — one URL per screen (the URL owns the current screen).
-- **Zustand** — single store (`src/state/useStore.js`): session state + actions.
+- **Zustand** (+ `persist`) — single store (`src/state/useStore.js`): session state + actions,
+  persisted to `localStorage` so the session is resumable (see Persistence).
 - **react-i18next** — UI internationalization; English is the source locale, French is
   a second locale, switchable from the sidebar.
 - **CSS Modules** — one `.module.css` per component; light/dark theme via CSS custom
@@ -64,6 +65,19 @@ On the Setup screen, **Import questions** accepts:
 Parsing lives in `src/lib/parseQuestions.js` (pure, lenient). Imported questions keep their
 `lang` and `type` (preserved in the data model and round-tripped in the JSONL export) and
 receive simulated candidates — there is no real backend in the prototype.
+
+## Persistence (resumable session)
+
+The store is a single global Zustand store, so all screens read the same data live. Durable
+state — imported/added questions, annotations, declared backends, `k`, threshold and
+preferences (theme, view, density) — is persisted to `localStorage` via Zustand's `persist`
+middleware (`partialize` keeps transient UI and the action functions out). This makes the
+session **resumable**: reloading the page or opening a screen's URL directly keeps your work
+(without persistence, the in-memory store would reset to the seed on every reload). The chosen
+UI language is persisted too (`src/i18n/index.js`).
+
+To start fresh, clear the site's `localStorage` (keys `touchstone-session` and
+`touchstone-lang`).
 
 ## Internationalization (i18n)
 
