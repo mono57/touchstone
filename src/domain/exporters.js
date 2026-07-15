@@ -3,7 +3,7 @@
 
 export function buildJsonl(questions, backend) {
   return questions.filter(x => x.done).map((x, qi) => JSON.stringify({
-    id: 'q_' + String(qi).padStart(3, '0'), query: x.query, lang: x.lang, backend,
+    id: 'q_' + String(qi).padStart(3, '0'), query: x.query, lang: x.lang, type: x.type || 'simple', backend,
     k_shown: x.candidates.length,
     candidate_ids: x.candidates.map(c => c.id),
     relevant_ids: x.relevantIds,
@@ -24,7 +24,7 @@ export function buildQrels(questions) {
 export function sampleJsonl(questions, backend) {
   const d0 = questions.find(x => x.done) || questions[0];
   return JSON.stringify({
-    id: 'q_017', query: d0.query, lang: d0.lang, backend,
+    id: 'q_017', query: d0.query, lang: d0.lang, type: d0.type || 'simple', backend,
     k_shown: d0.candidates.length,
     candidate_ids: d0.candidates.map(c => c.id),
     relevant_ids: d0.relevantIds,

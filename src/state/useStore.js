@@ -88,9 +88,11 @@ export const useStore = create((set, get) => ({
     if (!t) return;
     set(s => ({ questions: [...s.questions, genQuestion(t)], draft: '' }));
   },
-  importSample: () => {
-    const batch = ['How do I invite a member to my team?', 'What are the quotas of my current plan?', 'How do I paginate API results?']
-      .map(qq => genQuestion(qq));
-    set(s => ({ questions: [...s.questions, ...batch] }));
+  // Append imported questions. Each item is { question, lang, type }; candidates
+  // are simulated (no real backend in the prototype).
+  addQuestions: (items) => {
+    if (!items || !items.length) return;
+    const created = items.map(it => genQuestion(it.question, it.lang, it.type));
+    set(s => ({ questions: [...s.questions, ...created] }));
   },
 }));

@@ -1,6 +1,8 @@
+import { useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import s from './SetupScreen.module.css';
 import { useStore } from '../state/useStore.js';
+import { parseQuestions } from '../lib/parseQuestions.js';
 
 const MANIFEST = [
   { k: 'name', v: '"Chaari docs"' },
@@ -20,8 +22,26 @@ export default function SetupScreen() {
   const setK = useStore(st => st.setK);
   const setDraft = useStore(st => st.setDraft);
   const addQuestion = useStore(st => st.addQuestion);
-  const importSample = useStore(st => st.importSample);
+  const addQuestions = useStore(st => st.addQuestions);
   const startAnnotating = useStore(st => st.startAnnotating);
+
+  const fileRef = useRef(null);
+  const [importMsg, setImportMsg] = useState(null);
+
+  const onFile = async (e) => {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = ''; // allow re-importing the same file
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const items = parseQuestions(text, file.name);
+      if (!items.length) { setImportMsg(t('setup.importError')); return; }
+      addQuestions(items);
+      setImportMsg(t('setup.imported', { n: items.length }));
+    } catch {
+      setImportMsg(t('setup.importError'));
+    }
+  };
 
   const langs = [...new Set(questions.map(q => q.lang))].join(' · ');
 
@@ -87,11 +107,19 @@ export default function SetupScreen() {
         <div>
           <div className={s.loadHead}>
             <span className={s.sectionLabel}>{t('setup.loadQuestions')}</span>
-            <button onClick={importSample} className={s.importBtn}>{t('setup.import')}</button>
+            <button onClick={() => fileRef.current && fileRef.current.click()} className={s.importBtn}>{t('setup.import')}</button>
+            <input
+              ref={fileRef}
+              type="file"
+              accept=".txt,.json,.jsonl,application/json,text/plain"
+              onChange={onFile}
+              style={{ display: 'none' }}
+            />
           </div>
           <div className={s.loadHint}>
             <Trans i18nKey="setup.loadHint" components={{ mono: <span className={s.mono11} /> }} />
           </div>
+          {importMsg && <div className={s.importMsg}>{importMsg}</div>}
           <div className={s.qBox}>
             <div className={s.qBoxHead}>
               <span className={s.qFile}>questions.txt</span>

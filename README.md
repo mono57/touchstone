@@ -35,6 +35,18 @@ npm run preview    # serve the production build
   properties applied on the root. Navigation via a `screen` state field (no router).
 - **No UI dependency**: icons are small inline SVGs, typography is IBM Plex Sans / Mono.
 
+## Importing questions
+
+On the Setup screen, **Import questions** accepts:
+
+- **`.json`** — an array of objects `[{ "question", "lang"?, "type"? }, …]` (also accepts a
+  plain array of strings, or an object with a top-level `questions` array).
+- **`.txt`** — one question per line.
+
+Parsing lives in `src/lib/parseQuestions.js` (pure, lenient). Imported questions keep their
+`lang` and `type` (preserved in the data model and round-tripped in the JSONL export) and
+receive simulated candidates — there is no real backend in the prototype.
+
 ## Internationalization (i18n)
 
 UI strings live in `src/i18n/locales/{en,fr}.json` and are consumed with `useTranslation()`
@@ -68,7 +80,8 @@ functions in `domain/` — no god render function.
 
 ## The 5 screens
 
-1. **Setup** — backend choice, manifest, `k` slider, question loading.
+1. **Setup** — backend choice, manifest, `k` slider, question loading (import a file or add
+   on the fly).
 2. **Annotate** — the core: ticking candidates (*Flow* or *Split* view, *Comfortable* /
    *Compact* density), keyboard shortcuts `1–9` / `←` `→` / `↵`, low-score tail collapsed
    for large `k`.

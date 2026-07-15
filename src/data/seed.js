@@ -116,12 +116,15 @@ export function stubPool() {
   ].map(r => ({ id: r[0], title: r[1], text: r[2], url: DOCS + r[0] }));
 }
 
-export function genQuestion(query, lang) {
+let genCounter = 0;
+export function genQuestion(query, lang, type) {
   const scores = [0.80, 0.63, 0.49, 0.36];
   const picked = [...stubPool()].sort(() => Math.random() - 0.5).slice(0, 4);
   const cands = picked.map((c, i) => ({ ...c, score: scores[i], judgeSuggested: scores[i] >= 0.6 }));
+  // Unique id even when importing many at once within the same millisecond.
+  const id = 'q_' + String(Date.now()).slice(-6) + '_' + (genCounter++);
   return {
-    id: 'q_' + String(Date.now()).slice(-6), lang: lang || 'en', query, done: false,
+    id, lang: lang || 'en', type: type || 'simple', query, done: false,
     candidates: cands, relevantIds: cands.filter(c => c.judgeSuggested).map(c => c.id), expectedAnswer: '',
   };
 }
