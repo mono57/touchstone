@@ -24,7 +24,7 @@ export default function SetupScreen() {
   const setK = useStore(st => st.setK);
   const setDraft = useStore(st => st.setDraft);
   const addQuestion = useStore(st => st.addQuestion);
-  const addQuestions = useStore(st => st.addQuestions);
+  const importQuestions = useStore(st => st.importQuestions);
   const startAnnotating = useStore(st => st.startAnnotating);
 
   const fileRef = useRef(null);
@@ -38,7 +38,7 @@ export default function SetupScreen() {
       const text = await file.text();
       const items = parseQuestions(text, file.name);
       if (!items.length) { setImportMsg(t('setup.importError')); return; }
-      addQuestions(items);
+      importQuestions(items);
       setImportMsg(t('setup.imported', { n: items.length }));
     } catch {
       setImportMsg(t('setup.importError'));

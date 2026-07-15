@@ -103,12 +103,13 @@ export const useStore = create(persist((set, get) => ({
     if (!t) return;
     set(s => ({ questions: [...s.questions, genQuestion(t)], draft: '' }));
   },
-  // Append imported questions. Each item is { question, lang, type }; candidates
-  // are simulated (no real backend in the prototype).
-  addQuestions: (items) => {
+  // Import from a file — REPLACES the current set of questions (a fresh golden
+  // set). Each item is { question, lang, type }; candidates are simulated (no
+  // real backend in the prototype). Resets the annotation cursor.
+  importQuestions: (items) => {
     if (!items || !items.length) return;
     const created = items.map(it => genQuestion(it.question, it.lang, it.type));
-    set(s => ({ questions: [...s.questions, ...created] }));
+    set({ questions: created, qIndex: 0, readingId: null, threshold: null, showBelow: false });
   },
 }), {
   name: 'touchstone-session',

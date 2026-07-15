@@ -66,6 +66,9 @@ Parsing lives in `src/lib/parseQuestions.js` (pure, lenient). Imported questions
 `lang` and `type` (preserved in the data model and round-tripped in the JSONL export) and
 receive simulated candidates — there is no real backend in the prototype.
 
+**Importing replaces the current question set** (a fresh golden set) and resets the annotation
+cursor. Use **+ Add** to append a single question on the fly instead.
+
 ## Persistence (resumable session)
 
 The store is a single global Zustand store, so all screens read the same data live. Durable
