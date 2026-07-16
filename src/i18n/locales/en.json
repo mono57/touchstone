@@ -63,7 +63,10 @@
     "kbdNext": "next",
     "previous": "← Previous",
     "skip": "Skip",
-    "saveNext": "Save & next"
+    "saveNext": "Save & next",
+    "loading": "Retrieving candidates from the backend…",
+    "loadError": "Could not retrieve candidates ({{error}}).",
+    "retry": "Retry"
   },
   "candidate": {
     "ai": "AI",

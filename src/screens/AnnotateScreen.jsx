@@ -45,6 +45,11 @@ export default function AnnotateScreen() {
   const next = useStore(st => st.next);
   const prev = useStore(st => st.prev);
   const skip = useStore(st => st.skip);
+  const loadCurrent = useStore(st => st.loadCurrent);
+
+  // Fetch real candidates for the current question from the active backend
+  // (no-op for questions that already carry candidates, e.g. the seed demo).
+  useEffect(() => { loadCurrent(); }, [qIndex, loadCurrent]);
 
   // Keyboard shortcuts — active only while this screen is mounted (i.e. on the
   // annotate screen). Reads fresh state via getState to avoid stale closures.
@@ -119,6 +124,19 @@ export default function AnnotateScreen() {
       </div>
 
       <div className={s.body}>
+        {q && q.loading && (
+          <div style={{ padding: '20px', color: 'var(--muted)', fontSize: '14px' }}>
+            {t('annotate.loading')}
+          </div>
+        )}
+        {q && q.loadError && !q.loading && (
+          <div style={{ padding: '20px', color: 'var(--danger, #c0392b)', fontSize: '14px' }}>
+            {t('annotate.loadError', { error: q.loadError })}{' '}
+            <button onClick={() => loadCurrent()} style={{ marginLeft: 8, cursor: 'pointer' }}>
+              {t('annotate.retry')}
+            </button>
+          </div>
+        )}
         {layout === 'flow' && (
           <div className={s.flow}>
             <div className={s.flowHead}>

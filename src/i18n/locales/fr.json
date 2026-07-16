@@ -63,7 +63,10 @@
     "kbdNext": "suivant",
     "previous": "← Précédent",
     "skip": "Passer",
-    "saveNext": "Enregistrer & suivant"
+    "saveNext": "Enregistrer & suivant",
+    "loading": "Récupération des candidats depuis le backend…",
+    "loadError": "Impossible de récupérer les candidats ({{error}}).",
+    "retry": "Réessayer"
   },
   "candidate": {
     "ai": "IA",

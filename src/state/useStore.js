@@ -1,6 +1,15 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { seed, genQuestion } from '../data/seed.js';
+import { retrieveCandidates } from '../lib/retrieve.js';
+
+// Default backends. chaari-local points at the dev Django server (host port
+// 8001) and carries the dev retrieve token; chaari-prod uses an env-interpolated
+// token (fill it in the Config screen).
+const DEFAULT_BACKENDS = [
+  { name: 'chaari-local', url: 'http://localhost:8001/internal/retrieve', auth: 'Authorization: Bearer touchstone-local-dev-token', k: 20, health: true },
+  { name: 'chaari-prod', url: 'https://api.chaari.app/internal/retrieve', auth: 'Authorization: Bearer ${CHAARI_TOKEN}', k: 20, health: true },
+];
 
 // Single source of truth for the annotation session. Local-first, append-only,
 // RESUMABLE: durable state is persisted to localStorage so imported questions,
@@ -11,11 +20,8 @@ export const useStore = create(persist((set, get) => ({
   theme: 'light',
   layout: 'flow',
   density: 'comfortable',
-  backend: 'chaari-prod',
-  backends: [
-    { name: 'chaari-prod', url: 'https://api.chaari.app/internal/retrieve', auth: 'Authorization: Bearer ${CHAARI_TOKEN}', k: 20, health: true },
-    { name: 'chaari-local', url: 'http://localhost:9000/retrieve', auth: '', k: 20, health: true },
-  ],
+  backend: 'chaari-local',
+  backends: DEFAULT_BACKENDS.map(b => ({ ...b })),
   newBackend: { name: '', url: '', auth: '', k: 20 },
   showBelow: false,
   k: 20,
@@ -96,6 +102,28 @@ export const useStore = create(persist((set, get) => ({
     set({ qIndex: fp < 0 ? 0 : fp, readingId: null });
   },
 
+  // Fetch real candidates for the current question from the active backend.
+  // Skips questions that already carry candidates (seed/demo) or are loaded.
+  loadCurrent: async () => {
+    const st = get();
+    const i = st.qIndex;
+    const q = st.questions[i];
+    if (!q) return;
+    if (q.loaded || (q.candidates && q.candidates.length > 0)) return;
+    const be = st.backends.find(b => b.name === st.backend);
+    if (!be) return;
+    const mark = (patch) => set(s => ({
+      questions: s.questions.map((qq, j) => (j === i ? { ...qq, ...patch } : qq)),
+    }));
+    mark({ loading: true, loadError: null });
+    try {
+      const cands = await retrieveCandidates(be, q.query, st.k);
+      mark({ candidates: cands, loaded: true, loading: false, loadError: null });
+    } catch (e) {
+      mark({ loading: false, loaded: false, loadError: String((e && e.message) || e) });
+    }
+  },
+
   // ----- question loading -----
   setDraft: (draft) => set({ draft }),
   addQuestion: (text) => {
@@ -113,7 +141,14 @@ export const useStore = create(persist((set, get) => ({
   },
 }), {
   name: 'touchstone-session',
-  version: 1,
+  version: 2,
+  // v2 refreshes the built-in backends (corrected chaari-local URL + dev token).
+  migrate: (persisted, version) => {
+    if (persisted && version < 2) {
+      return { ...persisted, backends: DEFAULT_BACKENDS.map(b => ({ ...b })), backend: 'chaari-local' };
+    }
+    return persisted;
+  },
   storage: createJSONStorage(() => localStorage),
   // Persist durable session state only — not transient UI (draft, readingId,
   // newBackend draft) and never the action functions.

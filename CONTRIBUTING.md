@@ -83,4 +83,4 @@ A maintainer will review as soon as they can. Thanks for contributing! 💚
 ## Reporting security issues
 
 Please **do not** open a public issue for security vulnerabilities. Instead, email
-**alban.ngoune@ext.quable.com** with the details and we'll respond as quickly as we can.
+**https://github.com/mono57/touchstone/issues** with the details and we'll respond as quickly as we can.

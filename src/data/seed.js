@@ -118,13 +118,13 @@ export function stubPool() {
 
 let genCounter = 0;
 export function genQuestion(query, lang, type) {
-  const scores = [0.80, 0.63, 0.49, 0.36];
-  const picked = [...stubPool()].sort(() => Math.random() - 0.5).slice(0, 4);
-  const cands = picked.map((c, i) => ({ ...c, score: scores[i], judgeSuggested: scores[i] >= 0.6 }));
+  // Real questions (added/imported): candidates start empty and are fetched
+  // from the active backend's /retrieve when the question is annotated
+  // (see useStore.loadCurrent). `loaded: false` marks it as needing a fetch.
   // Unique id even when importing many at once within the same millisecond.
   const id = 'q_' + String(Date.now()).slice(-6) + '_' + (genCounter++);
   return {
     id, lang: lang || 'en', type: type || 'simple', query, done: false,
-    candidates: cands, relevantIds: cands.filter(c => c.judgeSuggested).map(c => c.id), expectedAnswer: '',
+    candidates: [], relevantIds: [], expectedAnswer: '', loaded: false,
   };
 }
