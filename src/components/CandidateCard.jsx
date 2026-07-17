@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import s from './CandidateCard.module.css';
 import { CheckMark } from './icons.jsx';
+import ChunkText from './ChunkText.jsx';
 
 // One candidate passage in the flow layout.
 export default function CandidateCard({ c, dense, onToggle }) {
@@ -35,7 +36,7 @@ export default function CandidateCard({ c, dense, onToggle }) {
             ))}
           </span>
         </div>
-        <p className={dense ? `${s.text} ${s.textDense}` : s.text}>{c.text}</p>
+        <ChunkText text={c.text} clamp dense={dense} className={s.text} />
       </div>
     </div>
   );

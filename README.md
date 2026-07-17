@@ -97,7 +97,7 @@ backend becomes annotatable:
 |----------|-------------------------------------------------------------------|
 | `id`     | Stable identifier for the passage/chunk (used as the label key).  |
 | `title`  | Human-readable heading shown on the candidate card.               |
-| `text`   | The passage the annotator reads to judge relevance.               |
+| `text`   | The passage the annotator reads to judge relevance. Rendered as Markdown (GFM tables, fenced code, inline code). |
 | `score`  | The backend's similarity/rank score (drives calibration & sort).  |
 
 Backends are declared on the **Contract** screen and serialized to a `touchstone.yaml`:
@@ -129,6 +129,8 @@ Each screen has its own URL — deep-linkable, refresh-safe, and back/forward wo
 2. **Annotate** (`/annotate`) — the core loop: tick relevant candidates in *Flow* or *Split*
    view at *Comfortable* or *Compact* density. Keyboard shortcuts: `1`–`9` toggle candidates,
    `←` `→` move between questions, `↵` confirms. Low-score tails collapse for large `k`.
+   Chunk text renders as Markdown (tables, fenced code, inline code) — clamped to a preview
+   with **Show more** in *Flow*, shown in full in the *Split* reader.
 3. **Golden set** (`/golden-set`) — overview, questions table, and calibration: a histogram of
    relevant chunks recommends a `k`; the distribution of similarity scores recommends a
    threshold.

@@ -108,7 +108,9 @@
 .readerId { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); }
 .readerSourcesLabel { font-size: 11px; color: var(--muted); }
 .readerLink { font-size: 11.5px; }
-.readerText { font-size: 15px; line-height: 1.75; color: var(--ink); margin: 0 0 26px; }
+/* Reader chunk — typography comes from ChunkText/.proseMd; this only sets the
+   gap before the action button. */
+.readerText { margin: 0 0 26px; }
 .action {
   padding: 11px 20px;
   border-radius: 10px;

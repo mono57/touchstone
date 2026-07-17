@@ -89,10 +89,6 @@
 .sourcesLabel { font-size: 10px; color: var(--muted); }
 .link { font-size: 11px; }
 
-.text { font-size: 13.5px; line-height: 1.62; color: var(--ink-2); margin: 9px 0 0; }
-.textDense {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
+/* Chunk body — typography lives in ChunkText/.prose; the card only sets the
+   gap under the meta row. */
+.text { margin-top: 9px; }

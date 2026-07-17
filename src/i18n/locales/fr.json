@@ -72,7 +72,9 @@
     "ai": "IA",
     "relevant": "pertinent",
     "sources": "sources :",
-    "score": "score"
+    "score": "score",
+    "showMore": "Voir plus",
+    "showLess": "Voir moins"
   },
   "overview": {
     "goldenSet": "Golden set · {{backend}}",

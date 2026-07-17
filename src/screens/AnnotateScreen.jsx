@@ -6,6 +6,7 @@ import { useStore } from '../state/useStore.js';
 import Segmented from '../components/Segmented.jsx';
 import CandidateCard from '../components/CandidateCard.jsx';
 import CandidateRow from '../components/CandidateRow.jsx';
+import ChunkText from '../components/ChunkText.jsx';
 
 const READ_CUTOFF = 0.30;
 
@@ -195,7 +196,7 @@ export default function AnnotateScreen() {
                       <a key={i} href={src.url} onClick={stopLink} className={s.readerLink}>{src.label} →</a>
                     ))}
                   </div>
-                  <p className={s.readerText}>{reading.text}</p>
+                  <ChunkText text={reading.text} size="md" className={s.readerText} />
                   <button
                     onClick={() => toggleCandidate(reading.id)}
                     className={reading.selected ? `${s.action} ${s.actionSelected}` : s.action}
