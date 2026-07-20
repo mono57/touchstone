@@ -12,7 +12,11 @@
 
 </div>
 
-<!-- Add a screenshot or short GIF of the Annotate screen here, e.g. docs/annotate.png -->
+<p align="center">
+  <img src="docs/annotate.png" alt="Touchstone Annotate screen — ticking relevant candidates returned by the backend, with LLM-judge suggestions and per-candidate scores" width="100%">
+  <br>
+  <em>The Annotate screen: tick the passages that answer the question among the candidates your backend returned.</em>
+</p>
 
 ---
 
@@ -138,6 +142,12 @@ Each screen has its own URL — deep-linkable, refresh-safe, and back/forward wo
    interop) generated from your annotations.
 5. **Contract** (`/contract`) — the retrieval contract, declared-backend management, the
    LLM-judge toggle, and the generated `touchstone.yaml`.
+
+<p align="center">
+  <img src="docs/golden-set.png" alt="Touchstone Golden set screen — overview counts, a per-question table with AI agreement, and calibration histograms recommending k and a cutoff threshold" width="100%">
+  <br>
+  <em>The Golden set screen: overview, per-question AI agreement, and calibration that recommends a <code>k</code> and a cutoff threshold.</em>
+</p>
 
 ## 📥 Importing questions
 
