@@ -1,5 +1,15 @@
 // Hand-drawn inline SVG icons (no icon font / package). All 16x16, currentColor.
 
+// Brand mark — matches the favicon in index.html: accent rounded square + white tick.
+export function Logo({ size = 22, className }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 100 100" className={className} aria-hidden="true">
+      <rect width="100" height="100" rx="22" style={{ fill: 'var(--accent)' }} />
+      <path d="M31 52 l12 13 l26 -28" fill="none" stroke="#fff" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export function CheckMark({ size = 13, color = '#fff' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 16 16" fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">

@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import s from './Sidebar.module.css';
 import { useStore } from '../state/useStore.js';
 import { LANGUAGES } from '../i18n/index.js';
-import { SetupIcon, AnnotateIcon, OverviewIcon, ExportIcon, ConfigIcon } from './icons.jsx';
+import { Logo, SetupIcon, AnnotateIcon, OverviewIcon, ExportIcon, ConfigIcon } from './icons.jsx';
 
 const NAV = [
   { path: '/setup', key: 'nav.setup', Icon: SetupIcon },
@@ -29,7 +29,7 @@ export default function Sidebar() {
   return (
     <aside className={s.aside}>
       <div className={s.header}>
-        <div className={s.logo} />
+        <Logo className={s.logo} />
         <div className={s.brand}>Touchstone</div>
         <div className={s.version}>v1</div>
       </div>

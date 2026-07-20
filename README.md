@@ -1,6 +1,8 @@
 <div align="center">
 
-# 🟢 Touchstone
+<img src="docs/logo.svg" alt="Touchstone logo" width="72" height="72">
+
+# Touchstone
 
 **Relevance annotation for building _golden sets_ that evaluate RAG systems.**
 

@@ -9,7 +9,7 @@
 }
 
 .header { padding: 20px 18px 14px; display: flex; align-items: center; gap: 10px; }
-.logo { width: 22px; height: 22px; border-radius: 6px; background: var(--accent); flex: 0 0 auto; }
+.logo { width: 22px; height: 22px; flex: 0 0 auto; display: block; }
 .brand { font-weight: 600; font-size: 15px; letter-spacing: -0.015em; }
 .version {
   margin-left: auto;
