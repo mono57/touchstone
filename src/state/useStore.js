@@ -1,14 +1,12 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { seed, genQuestion } from '../data/seed.js';
+import { makeQuestion } from '../domain/question.js';
 import { retrieveCandidates } from '../lib/retrieve.js';
 
-// Default backends. chaari-local points at the dev Django server (host port
-// 8001) and carries the dev retrieve token; chaari-prod uses an env-interpolated
-// token (fill it in the Config screen).
+// A single example backend to get started — edit or replace it on the Contract
+// screen. Any search system that implements POST /retrieve can be declared here.
 const DEFAULT_BACKENDS = [
-  { name: 'chaari-local', url: 'http://localhost:8001/internal/retrieve', auth: 'Authorization: Bearer touchstone-local-dev-token', k: 20, health: true },
-  { name: 'chaari-prod', url: 'https://api.chaari.app/internal/retrieve', auth: 'Authorization: Bearer ${CHAARI_TOKEN}', k: 20, health: true },
+  { name: 'local', url: 'http://localhost:8000/retrieve', auth: '', k: 20, health: true },
 ];
 
 // Single source of truth for the annotation session. Local-first, append-only,
@@ -20,7 +18,7 @@ export const useStore = create(persist((set, get) => ({
   theme: 'light',
   layout: 'flow',
   density: 'comfortable',
-  backend: 'chaari-local',
+  backend: 'local',
   backends: DEFAULT_BACKENDS.map(b => ({ ...b })),
   newBackend: { name: '', url: '', auth: '', k: 20 },
   showBelow: false,
@@ -30,7 +28,7 @@ export const useStore = create(persist((set, get) => ({
   judgeEnabled: true,
   threshold: null,
   draft: '',
-  questions: seed(),
+  questions: [],
 
   // ----- preferences -----
   toggleTheme: () => set(s => ({ theme: s.theme === 'dark' ? 'light' : 'dark' })),
@@ -102,8 +100,8 @@ export const useStore = create(persist((set, get) => ({
     set({ qIndex: fp < 0 ? 0 : fp, readingId: null });
   },
 
-  // Fetch real candidates for the current question from the active backend.
-  // Skips questions that already carry candidates (seed/demo) or are loaded.
+  // Fetch candidates for the current question from the active backend.
+  // Skips questions already loaded or that already carry candidates.
   loadCurrent: async () => {
     const st = get();
     const i = st.qIndex;
@@ -129,23 +127,24 @@ export const useStore = create(persist((set, get) => ({
   addQuestion: (text) => {
     const t = (text || '').trim();
     if (!t) return;
-    set(s => ({ questions: [...s.questions, genQuestion(t)], draft: '' }));
+    set(s => ({ questions: [...s.questions, makeQuestion(t)], draft: '' }));
   },
   // Import from a file — REPLACES the current set of questions (a fresh golden
-  // set). Each item is { question, lang, type }; candidates are simulated (no
-  // real backend in the prototype). Resets the annotation cursor.
+  // set). Each item is { question, lang, type }; candidates are fetched from the
+  // active backend on the Annotate screen. Resets the annotation cursor.
   importQuestions: (items) => {
     if (!items || !items.length) return;
-    const created = items.map(it => genQuestion(it.question, it.lang, it.type));
+    const created = items.map(it => makeQuestion(it.question, it.lang, it.type));
     set({ questions: created, qIndex: 0, readingId: null, threshold: null, showBelow: false });
   },
 }), {
   name: 'touchstone-session',
-  version: 2,
-  // v2 refreshes the built-in backends (corrected chaari-local URL + dev token).
+  version: 3,
+  // v3 drops the legacy demo data (sample questions + example backends) from any
+  // previously persisted session.
   migrate: (persisted, version) => {
-    if (persisted && version < 2) {
-      return { ...persisted, backends: DEFAULT_BACKENDS.map(b => ({ ...b })), backend: 'chaari-local' };
+    if (persisted && version < 3) {
+      return { ...persisted, backends: DEFAULT_BACKENDS.map(b => ({ ...b })), backend: 'local', questions: [], qIndex: 0 };
     }
     return persisted;
   },

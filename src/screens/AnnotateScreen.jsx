@@ -48,8 +48,8 @@ export default function AnnotateScreen() {
   const skip = useStore(st => st.skip);
   const loadCurrent = useStore(st => st.loadCurrent);
 
-  // Fetch real candidates for the current question from the active backend
-  // (no-op for questions that already carry candidates, e.g. the seed demo).
+  // Fetch candidates for the current question from the active backend
+  // (no-op for questions whose candidates are already loaded).
   useEffect(() => { loadCurrent(); }, [qIndex, loadCurrent]);
 
   // Keyboard shortcuts — active only while this screen is mounted (i.e. on the
@@ -75,7 +75,7 @@ export default function AnnotateScreen() {
   const dense = density === 'compact';
   const total = questions.length;
   const doneCount = questions.filter(x => x.done).length;
-  const progressPct = Math.round((doneCount / total) * 100);
+  const progressPct = total ? Math.round((doneCount / total) * 100) : 0;
 
   const { list, reading } = useMemo(() => decorateCandidates(q, readingId), [q, readingId]);
 

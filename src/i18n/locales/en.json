@@ -30,7 +30,7 @@
     "loadHint": "From a <mono>.txt</mono> or <mono>.json</mono> file, or typed on the fly below.",
     "imported": "{{n}} questions imported",
     "importError": "Couldn't read that file — expected .txt (one per line) or .json.",
-    "lines": "{{n}} lines · {{langs}}",
+    "lines": "{{n}} lines{{langs}}",
     "addPlaceholder": "Add a question on the fly…",
     "add": "+ Add",
     "start": "Start annotating",

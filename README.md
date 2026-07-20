@@ -38,10 +38,10 @@ the backend. Annotation is append-only and resumable, so you can build a golden 
 short sessions without losing work.
 
 > [!NOTE]
-> Touchstone is currently a **single-page front-end prototype** (React + Vite). It ships with
-> in-memory sample data and **simulates** `POST /retrieve` calls — there is no real backend
-> wired up yet. The retrieval contract below describes the design your backend implements; the
-> UI, data model, and export formats are real and complete.
+> Touchstone is a **front-end application** (React + Vite) — it ships no retriever and no
+> sample data, and starts empty. You point it at a backend that implements the `POST /retrieve`
+> contract (below); candidates are then fetched live from that backend on the Annotate screen.
+> The UI, data model, and export formats are complete.
 
 ## 🤔 Why Touchstone?
 
@@ -160,9 +160,10 @@ On the **Setup** screen, **Import questions** accepts:
 - **`.txt`** — one question per line.
 
 Parsing lives in [`src/lib/parseQuestions.js`](src/lib/parseQuestions.js) (pure and lenient).
-Imported questions keep their `lang` and `type` (round-tripped in the JSONL export) and receive
-simulated candidates. **Importing replaces the current question set** and resets the annotation
-cursor; use **+ Add** to append a single question instead.
+Imported questions keep their `lang` and `type` (round-tripped in the JSONL export); their
+candidates are fetched from the active backend when you open them on the Annotate screen.
+**Importing replaces the current question set** and resets the annotation cursor; use **+ Add**
+to append a single question instead.
 
 ## 📤 Golden-set output formats
 
@@ -214,9 +215,8 @@ src/
 ├── main.jsx                # React mount
 ├── App.jsx                 # shell: root theme + Sidebar + routed screens
 ├── index.css               # global reset + keyframes
-├── lib/                    # utilities (css, theme, download, parseQuestions)
-├── data/seed.js            # sample data (pure)
-├── domain/                 # PURE business logic (agreement, calibration, exporters)
+├── lib/                    # utilities (retrieve client, parseQuestions, css, theme, download)
+├── domain/                 # PURE business logic (question factory, agreement, calibration, exporters)
 ├── state/useStore.js       # Zustand store (single source of truth)
 ├── i18n/                   # i18next config + locales (en, fr)
 ├── components/             # UI building blocks + CSS Modules

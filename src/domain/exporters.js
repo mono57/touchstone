@@ -23,6 +23,15 @@ export function buildQrels(questions) {
 // preview is stable across renders).
 export function sampleJsonl(questions, backend) {
   const d0 = questions.find(x => x.done) || questions[0];
+  // No questions yet — show a representative example of the output shape.
+  if (!d0) {
+    return JSON.stringify({
+      id: 'q_000', query: 'How do I rotate my API keys?', lang: 'en', type: 'simple',
+      backend: backend || 'local', k_shown: 0,
+      candidate_ids: [], relevant_ids: [], expected_answer: '',
+      judge_suggested: [], annotator: 'me', ts: '2026-01-01T00:00:00Z',
+    }, null, 2);
+  }
   return JSON.stringify({
     id: 'q_017', query: d0.query, lang: d0.lang, type: d0.type || 'simple', backend,
     k_shown: d0.candidates.length,

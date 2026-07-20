@@ -6,7 +6,7 @@ import { useStore } from '../state/useStore.js';
 import { parseQuestions } from '../lib/parseQuestions.js';
 
 const MANIFEST = [
-  { k: 'name', v: '"Chaari docs"' },
+  { k: 'name', v: '"my-corpus"' },
   { k: 'id_scheme', v: '"page#anchor"' },
   { k: 'default_k', v: '20' },
   { k: 'languages', v: '["en"]' },
@@ -45,7 +45,8 @@ export default function SetupScreen() {
     }
   };
 
-  const langs = [...new Set(questions.map(q => q.lang))].join(' · ');
+  const langList = [...new Set(questions.map(q => q.lang))];
+  const langs = langList.length ? ' · ' + langList.join(' · ') : '';
 
   return (
     <div className={s.wrap}>

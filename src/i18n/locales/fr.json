@@ -30,7 +30,7 @@
     "loadHint": "Depuis un fichier <mono>.txt</mono> ou <mono>.json</mono>, ou saisies à la volée ci-dessous.",
     "imported": "{{n}} questions importées",
     "importError": "Fichier illisible — attendu .txt (une par ligne) ou .json.",
-    "lines": "{{n}} lignes · {{langs}}",
+    "lines": "{{n}} lignes{{langs}}",
     "addPlaceholder": "Ajouter une question à la volée…",
     "add": "+ Ajouter",
     "start": "Commencer l'annotation",

@@ -4,8 +4,8 @@ import en from './locales/en.json';
 import fr from './locales/fr.json';
 
 // UI internationalization. English is the source/default locale; French is a
-// second locale. Sample data (the golden set) is NOT localized — it's content,
-// not UI, and in a real deployment it comes from the backend.
+// second locale. Golden-set content (questions and candidate passages) is NOT
+// localized — it's data from the backend, not UI.
 export const LANGUAGES = ['en', 'fr'];
 const LANG_KEY = 'touchstone-lang';
 

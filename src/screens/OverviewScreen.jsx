@@ -24,7 +24,7 @@ export default function OverviewScreen() {
     { value: `${doneCount}/${total}`, label: t('overview.statQuestions'), color: 'var(--accent)' },
     { value: String(relevantTotal), label: t('overview.statLabels'), color: 'var(--ink)' },
     { value: String(k), label: t('overview.statShown'), color: 'var(--ink)' },
-    { value: backend === 'chaari-prod' ? 'prod' : 'local', label: t('overview.statBackend'), color: 'var(--ai)' },
+    { value: backend || '—', label: t('overview.statBackend'), color: 'var(--ai)' },
   ];
 
   const rows = questions.map((x, i) => {
