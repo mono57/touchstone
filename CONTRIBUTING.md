@@ -80,7 +80,8 @@ All user-facing strings must go through i18n — never hardcode display text.
 
 A maintainer will review as soon as they can. Thanks for contributing! 💚
 
-## Reporting security issues
+## Reporting bugs & security issues
 
-Please **do not** open a public issue for security vulnerabilities. Instead, email
-**https://github.com/mono57/touchstone/issues** with the details and we'll respond as quickly as we can.
+Found a bug or a potential security issue? Please
+[open an issue](https://github.com/mono57/touchstone/issues) with the details and we'll take a
+look as soon as we can.

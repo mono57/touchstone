@@ -275,6 +275,12 @@ setup, project conventions, and PR process, and note our
 [Code of Conduct](CODE_OF_CONDUCT.md). Good first areas: new export formats, a real
 `/retrieve` client, additional locales, and accessibility improvements.
 
+## 🙏 Acknowledgments
+
+Touchstone was designed and built with [Claude](https://claude.com) via
+[Claude Code](https://claude.com/claude-code), Anthropic's agentic coding tool — from the
+UI and data model to these docs. Commits are co-authored accordingly.
+
 ## 📄 License
 
 Touchstone is released under the [MIT License](LICENSE).
